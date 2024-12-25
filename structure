@@ -1,0 +1,40 @@
+// - /app
+//   - /dashboard
+//     - page.js          // Composant principal du tableau de bord
+//     - layout.js        // Mise en page pour le tableau de bord
+//     - analytics.js     // Sous-section pour les analyses
+//     - transactions.js  // Sous-section pour les transactions en temps réel
+//   - /settings
+//     - page.js          // Page des paramètres
+//   - /auth
+//     - login.js         // Page de connexion
+//     - register.js      // Page d'inscription
+//   - /api
+//     - auth
+//       - route.js       // API pour gérer l'authentification
+//     - transactions
+//       - route.js       // API pour gérer les transactions
+
+// - /redux
+//   - /features
+//     - authSlice.js      // Gestion des états pour l'authentification
+//     - transactionSlice.js // Gestion des états pour les transactions
+//   - store.js            // Configuration du store Redux
+
+// - /components
+//   - Navbar.js           // Barre de navigation principale
+//   - Sidebar.js          // Barre latérale pour la navigation
+//   - TransactionCard.js  // Carte pour afficher une transaction
+
+// - /utils
+//   - websocket.js        // Configuration des WebSockets pour les transactions
+//   - apiClient.js        // Client pour les appels API
+
+// - /styles
+//   - globals.css         // Styles globaux
+//   - dashboard.css       // Styles spécifiques au tableau de bord
+
+// Exemple de Code:
+
+// /app/dashboard/page.js
+"use client";
