@@ -1,9 +1,18 @@
-"use client"
+"use client";
 
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "../features/sidebarSlice";
 import { BellIcon, SearchIcon, MenuIcon, UserIcon } from "lucide-react";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
+import { Button } from "./ui/button";
+import { redirect } from "next/navigation";
 
 const Topbar = () => {
   const isSidebarOpen = useSelector((state) => state.sidebar.isOpen);
@@ -49,10 +58,11 @@ const Topbar = () => {
 
         {/* Profil utilisateur */}
         <div className="flex items-center gap-2">
-          <UserIcon className="w-6 h-6 text-gray-600" />
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
           <div className="hidden md:block">
-            <p className="text-sm font-semibold text-gray-700">John Doe</p>
-            <p className="text-xs text-gray-500">Admin</p>
+            <Button onClick={()=> redirect('/user-profile')}>Profile</Button>
           </div>
         </div>
       </div>

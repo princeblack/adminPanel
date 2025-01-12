@@ -51,7 +51,7 @@ const Sidebar = () => {
     <div
       className={`${
         isOpen ? "w-64" : "w-20"
-      } bg-[#168092] text-white h-screen transition-all duration-300 flex flex-col`}
+      } bg-[#0b3c45] text-white h-screen transition-all duration-300 flex flex-col`}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700">

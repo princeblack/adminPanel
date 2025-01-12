@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 ChartJS.register(ArcElement, Tooltip, Legend);
 import { motion } from "framer-motion";
 
@@ -21,6 +21,7 @@ const SalesByCategoryWidget = () => {
 
   const options: any = {
     responsive: true,
+    // maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
@@ -40,7 +41,7 @@ const SalesByCategoryWidget = () => {
   >
       <h3 className="text-lg font-semibold text-gray-700">Sales by Category</h3>
       <div className="mt-2">
-        <Pie data={data} options={options} />
+        <Doughnut data={data} options={options} />
       </div>
     </motion.div>
 

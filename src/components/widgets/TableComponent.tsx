@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import {
   Table,
@@ -18,63 +18,11 @@ import {
   Pagination,
 } from "@nextui-org/react";
 
-export const columns = [
-  { name: "Order ID", uid: "orderId", sortable: true },
-  { name: "Customer Name", uid: "customerName", sortable: true },
-  { name: "Product", uid: "product", sortable: true },
-  { name: "Quantity", uid: "quantity", sortable: true },
-  { name: "Total Price", uid: "totalPrice", sortable: true },
-  { name: "Order Status", uid: "status", sortable: true },
-  { name: "Actions", uid: "actions" },
-];
-
-export const statusOptions = [
-  { name: "Pending", uid: "pending" },
-  { name: "Shipped", uid: "shipped" },
-  { name: "Delivered", uid: "delivered" },
-  { name: "Cancelled", uid: "cancelled" },
-];
-
-export const orders = [
-  {
-    orderId: 101,
-    customerName: "John Doe",
-    product: "Smartphone",
-    quantity: 2,
-    totalPrice: "$1200",
-    status: "pending",
-  },
-  {
-    orderId: 102,
-    customerName: "Jane Smith",
-    product: "Laptop",
-    quantity: 1,
-    totalPrice: "$1500",
-    status: "shipped",
-  },
-  {
-    orderId: 103,
-    customerName: "Alice Johnson",
-    product: "Headphones",
-    quantity: 3,
-    totalPrice: "$300",
-    status: "delivered",
-  },
-  {
-    orderId: 104,
-    customerName: "Bob Brown",
-    product: "Monitor",
-    quantity: 1,
-    totalPrice: "$400",
-    status: "cancelled",
-  },
-];
-
 export function capitalize(s) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
 }
 
-export const PlusIcon = ({size = 24, width, height, ...props}) => {
+export const PlusIcon = ({ size = 24, width, height, ...props }) => {
   return (
     <svg
       aria-hidden="true"
@@ -100,7 +48,7 @@ export const PlusIcon = ({size = 24, width, height, ...props}) => {
   );
 };
 
-export const VerticalDotsIcon = ({size = 24, width, height, ...props}) => {
+export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
   return (
     <svg
       aria-hidden="true"
@@ -150,7 +98,7 @@ export const SearchIcon = (props) => {
   );
 };
 
-export const ChevronDownIcon = ({strokeWidth = 1.5, ...otherProps}) => {
+export const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => {
   return (
     <svg
       aria-hidden="true"
@@ -174,53 +122,57 @@ export const ChevronDownIcon = ({strokeWidth = 1.5, ...otherProps}) => {
   );
 };
 
-const statusColorMap = {
-  pending: "warning",
-  shipped: "primary",
-  delivered: "success",
-  cancelled: "danger",
-};
-
-const INITIAL_VISIBLE_COLUMNS = ["customerName", "product","quantity", "totalPrice","status", "actions"];
-
-export default function App() {
+export default function TableComponent({
+  statusColorMap,
+  data,
+  statusOptions,
+  columns,
+  VISIBLE_COLUMNS
+}) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [visibleColumns, setVisibleColumns] = React.useState(
+    new Set(VISIBLE_COLUMNS)
+  );
   const [statusFilter, setStatusFilter] = React.useState("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(12);
   const [sortDescriptor, setSortDescriptor] = React.useState({
     column: "age",
     direction: "ascending",
   });
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(orders.length / rowsPerPage);
+  const pages = Math.ceil(data.length / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
 
-    return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+    return columns.filter((column) =>
+      Array.from(visibleColumns).includes(column.uid)
+    );
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...orders];
+    let filteredUsers = [...data];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase()),
+      filteredUsers = filteredUsers.filter((item) =>
+        item.name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
-    if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status),
+    if (
+      statusFilter !== "all" &&
+      Array.from(statusFilter).length !== statusOptions.length
+    ) {
+      filteredUsers = filteredUsers.filter((item) =>
+        Array.from(statusFilter).includes(item.status)
       );
     }
 
     return filteredUsers;
-  }, [orders, filterValue, statusFilter]);
+  }, [data, filterValue, statusFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -239,35 +191,37 @@ export default function App() {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  const renderCell = React.useCallback((item, columnKey) => {
+    const cellValue = item[columnKey];
 
     switch (columnKey) {
       case "name":
         return (
           <User
-            avatarProps={{radius: "full", size: "sm", src: user.avatar}}
+            avatarProps={{ radius: "full", size: "sm", src: item.avatar }}
             classNames={{
               description: "text-default-500",
             }}
-            description={user.email}
+            description={item.email}
             name={cellValue}
           >
-            {user.email}
+            {item.email}
           </User>
         );
       case "role":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{cellValue}</p>
-            <p className="text-bold text-tiny capitalize text-default-500">{user.team}</p>
+            <p className="text-bold text-tiny capitalize text-default-500">
+              {item.team}
+            </p>
           </div>
         );
       case "status":
         return (
           <Chip
             className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[user.status]}
+            color={statusColorMap[item.status]}
             size="sm"
             variant="dot"
           >
@@ -379,13 +333,19 @@ export default function App() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button className="bg-foreground text-background" endContent={<PlusIcon />} size="sm">
+            <Button
+              className="bg-foreground text-background"
+              endContent={<PlusIcon />}
+              size="sm"
+            >
               Add New
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {orders.length} orders</span>
+          <span className="text-default-400 text-small">
+            Total {data.length} data
+          </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -395,6 +355,8 @@ export default function App() {
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
             </select>
           </label>
         </div>
@@ -406,7 +368,7 @@ export default function App() {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    orders.length,
+    data.length,
     hasSearchFilter,
   ]);
 
@@ -450,12 +412,10 @@ export default function App() {
         "group-data-[last=true]/tr:last:before:rounded-none",
       ],
     }),
-    [],
+    []
   );
 
   return (
-    <div className="overflow-y-scroll mt-3 p-2 bg-white h-lvh">
-
     <Table
       isCompact
       removeWrapper
@@ -486,15 +446,15 @@ export default function App() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No orders found"} items={sortedItems}>
+      <TableBody emptyContent={"No data found"} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.orderId}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+          <TableRow key={item.id}>
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
           </TableRow>
         )}
       </TableBody>
     </Table>
-    </div>
   );
 }
-

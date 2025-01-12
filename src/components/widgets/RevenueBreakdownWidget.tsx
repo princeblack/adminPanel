@@ -80,7 +80,7 @@ const RevenueBreakdownWidget = () => {
   };
 
   return (
-    <div className="bg-white shadow-md p-1 rounded-lg w-full h-auto">
+    <div className="bg-white shadow-md p-2 rounded-lg w-full h-auto">
       <h3 className="text-lg font-semibold text-gray-700">Revenue Breakdown</h3>
       <div className="flex mb-2">
         <p className="text-black mr-2"> $97,685,089</p>
@@ -94,7 +94,7 @@ const RevenueBreakdownWidget = () => {
           <p className="text-black ml-1">Compared to last month</p>
         </span>
       </div>
-      <div className="relative w-full h-72">
+      <div className="relative w-full h-56">
         <Line data={data} options={options} />
       </div>
     </div>

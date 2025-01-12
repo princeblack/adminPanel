@@ -25,7 +25,7 @@ import {
   MoveUpLeft,
 } from "lucide-react";
 
-const PendingOrdersWidget = () => {
+const RevenueCard = ({data,summe,title, subtitle}) => {
   const changePercentage = 82; 
   const isPositive = changePercentage >= 0;
   const arrowIcon = isPositive ? (
@@ -39,18 +39,7 @@ const PendingOrdersWidget = () => {
   ) : (
     <ArrowDownIcon className="h-5 w-5 text-red-500" />
   );
-  const data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-      {
-        label: "",
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: "rgba(22, 128, 146,0.7)",
-        borderWidth: 0,
-        borderRadius: Number.MAX_VALUE,
-      },
-    ],
-  };
+
 
   const options = {
     responsive: true,
@@ -95,7 +84,7 @@ const PendingOrdersWidget = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="bg-white  rounded-lg p-1 shadow-[inset_0_-2px_40px_rgba(255,255,255,0.6)]">
-            <h4 className="text-lg">Pending Orders</h4>
+            <h4 className="text-lg">{title}</h4>
             <div className="flex">
               <span
                 className={`text-sm flex ${
@@ -104,11 +93,11 @@ const PendingOrdersWidget = () => {
               >
                 {arrowIcon}
                 {Math.abs(changePercentage)}%
-                <p className="text-black ml-1">Compared to last month</p>
+                <p className="text-black ml-1">{subtitle}</p>
               </span>
             </div>
             <div className="flex justify-between items-end w-full overflow-hidden">
-              <h2 className="text-2xl font-bold">678+</h2>
+              <h2 className="text-2xl font-bold">{summe}+</h2>
               <div className="relative flex-1 w-1/2 h-10">
                 <Bar data={data} options={options} />
               </div>
@@ -118,4 +107,4 @@ const PendingOrdersWidget = () => {
   );
 };
 
-export default PendingOrdersWidget;
+export default RevenueCard;

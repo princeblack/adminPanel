@@ -31,7 +31,9 @@ const RevenueOverTimeWidget = () => {
         label: "Revenue ($)",
         data: [12000, 19000, 3000, 5000, 20000, 30000, 45000],
         borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(22, 128, 146,0.7)",
+        // backgroundColor: "rgba(22, 128, 146,0.7)",
+        backgroundColor: ["rgba(22, 128, 146,0.7)", "rgba(201, 235, 242, 0.7)"],
+
         tension: 0.4,
         fill: false,
       },
@@ -90,7 +92,7 @@ const RevenueOverTimeWidget = () => {
   };
 
   return (
-    <div className="bg-white shadow-md p-1 rounded-lg w-full h-auto">
+    <div className="bg-white shadow-md p-2 rounded-lg w-full h-auto">
       <h3 className="text-lg font-semibold text-gray-700">Revenue Over Time</h3>
       <div className="flex mb-2">
         <p className="text-black mr-2"> $97,685,089</p>
@@ -105,7 +107,7 @@ const RevenueOverTimeWidget = () => {
         </span>
       </div>
 
-      <div className=" relative w-full h-72">
+      <div className=" relative w-full h-56">
         <Bar data={chartData} options={options} />
       </div>
     </div>

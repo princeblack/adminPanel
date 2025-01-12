@@ -50,7 +50,7 @@ const ConversionRate = () => {
       {
         label: "",
         data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: ["rgba(22, 128, 146,0.7)", "rgba(201, 235, 242, 0.7)"],
+        backgroundColor: "rgba(22, 128, 146,0.7)",
         borderWidth: 0,
         borderRadius: Number.MAX_VALUE,
       },
@@ -59,6 +59,8 @@ const ConversionRate = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
+
     plugins: {
       legend: {
         display: false,
@@ -112,9 +114,9 @@ const ConversionRate = () => {
             <p className="text-black ml-1">Compared to last month</p>
           </span>
         </div>
-        <div className="flex justify-between items-end w-full">
+        <div className="flex justify-between items-end w-full overflow-hidden">
           <h2 className="text-2xl font-bold">5,98%</h2>
-          <div className="relative w-28 h-full">
+          <div className="relative flex-1 w-1/2 h-10">
             <Bar data={data} options={options} />
           </div>
         </div>
