@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import 'leaflet/dist/leaflet.css';
-import {Card, CardHeader, CardBody, Image} from "@nextui-org/react";
+import {Card, CardBody, } from "@nextui-org/react";
 
 // Sample data for active users by country
 const activeUsersData = [

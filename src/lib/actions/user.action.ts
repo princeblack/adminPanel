@@ -3,7 +3,7 @@
 import User from "@/lib/models/user.model";
 import {connectDB} from "@/lib/db";
 
-export async function creatUser(user:any){
+export async function creatUser(user: unknown){
 
     try {
         await connectDB()

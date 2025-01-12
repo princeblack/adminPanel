@@ -19,7 +19,7 @@ const SalesByCategoryWidget = () => {
     ],
   };
 
-  const options: any = {
+  const options= {
     responsive: true,
     // maintainAspectRatio: false,
     plugins: {

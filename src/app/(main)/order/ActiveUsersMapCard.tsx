@@ -1,6 +1,6 @@
 import React from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import L from 'leaflet';
+// import L from 'leaflet';
 import {Card,  CardBody, CardHeader} from "@nextui-org/react";
 import 'leaflet/dist/leaflet.css';
 import countryGeoData from "@/utils/geo.json";

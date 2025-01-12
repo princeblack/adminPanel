@@ -20,7 +20,6 @@ import { ChevronFirst, ChevronLast } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 import { cn} from "@/lib/utils"
-import {Divider} from "@nextui-org/divider";
 
 const Sidebar = () => {
   const isOpen = useSelector((state) => state.sidebar.isOpen);

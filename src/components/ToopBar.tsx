@@ -1,21 +1,16 @@
 "use client";
 
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../features/sidebarSlice";
-import { BellIcon, SearchIcon, MenuIcon, UserIcon } from "lucide-react";
+import { BellIcon, SearchIcon, MenuIcon } from "lucide-react";
 import {
-  ClerkProvider,
-  SignInButton,
   SignedIn,
-  SignedOut,
   UserButton,
 } from "@clerk/nextjs";
-import { Button } from "./ui/button";
-import { redirect } from "next/navigation";
+
 
 const Topbar = () => {
-  const isSidebarOpen = useSelector((state) => state.sidebar.isOpen);
   const dispatch = useDispatch();
 
   return (
@@ -62,7 +57,7 @@ const Topbar = () => {
             <UserButton />
           </SignedIn>
           <div className="hidden md:block">
-            <Button onClick={()=> redirect('/user-profile')}>Profile</Button>
+            {/* <Button onClick={()=> redirect('/user-profile')}>Profile</Button> */}
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ import {
   MoveUpLeft,
 } from "lucide-react";
 const RevenueOverTimeWidget = () => {
-  const [chartData, setChartData] = useState({
+  const chartData = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
       {
@@ -38,7 +38,7 @@ const RevenueOverTimeWidget = () => {
         fill: false,
       },
     ],
-  });
+  };
   const changePercentage = 49;
   const isPositive = changePercentage >= 0;
   const arrowIcon = isPositive ? (
@@ -53,7 +53,7 @@ const RevenueOverTimeWidget = () => {
     <ArrowDownIcon className="h-5 w-5 text-red-500" />
   );
 
-  const options: any = {
+  const options= {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {

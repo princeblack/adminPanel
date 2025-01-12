@@ -1,4 +1,4 @@
-import mongoose , {Mongoose} from "mongoose"
+import mongoose from "mongoose"
 
 let cached = global.mongoose;
 const MONGODB_URL = process.env.DB_URL

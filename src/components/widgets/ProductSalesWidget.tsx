@@ -434,12 +434,12 @@ const ProductSalesWidget = () => {
         wrapper: "max-h-[382px]",
       }}
       selectedKeys={selectedKeys}
-      // selectionMode="multiple"
+      selectionMode="multiple"
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
-      // onSelectionChange={setSelectedKeys}
-      // onSortChange={setSortDescriptor}
+      onSelectionChange={setSelectedKeys}
+      onSortChange={setSortDescriptor}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
