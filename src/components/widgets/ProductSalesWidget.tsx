@@ -383,15 +383,7 @@ const ProductSalesWidget = () => {
         </div>
       </div>
     );
-  }, [
-    filterValue,
-    statusFilter,
-    visibleColumns,
-    onRowsPerPageChange,
-    productData.length,
-    onSearchChange,
-    hasSearchFilter,
-  ]);
+  }, [filterValue, onSearchChange, statusFilter, visibleColumns, onRowsPerPageChange, onClear]);
 
   const bottomContent = React.useMemo(() => {
     return (
@@ -420,7 +412,7 @@ const ProductSalesWidget = () => {
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, filteredItems.length, page, pages, onPreviousPage, onNextPage]);
 
   return (
     <div className="bg-white shadow-md p-4 rounded-lg col-span-2">

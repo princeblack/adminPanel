@@ -567,15 +567,7 @@ export default function OrderTable() {
         </div>
       </div>
     );
-  }, [
-    filterValue,
-    statusFilter,
-    visibleColumns,
-    onSearchChange,
-    onRowsPerPageChange,
-    orders.length,
-    hasSearchFilter,
-  ]);
+  }, [filterValue, statusFilter, visibleColumns, onSearchChange, onRowsPerPageChange]);
 
   const bottomContent = React.useMemo(() => {
     return (

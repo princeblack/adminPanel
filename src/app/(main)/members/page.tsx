@@ -582,15 +582,7 @@ export default function App() {
         </div>
       </div>
     );
-  }, [
-    filterValue,
-    statusFilter,
-    visibleColumns,
-    onSearchChange,
-    onRowsPerPageChange,
-    users.length,
-    hasSearchFilter,
-  ]);
+  }, [filterValue, statusFilter, visibleColumns, onSearchChange, onRowsPerPageChange]);
 
   const bottomContent = React.useMemo(() => {
     return (
