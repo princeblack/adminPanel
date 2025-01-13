@@ -18,24 +18,23 @@ import {
   Pagination,
 } from "@nextui-org/react";
 
-// export const columns = [
-//   { name: "ID", uid: "id", sortable: true },
-//   { name: "NAME", uid: "name", sortable: true },
-//   { name: "AGE", uid: "age", sortable: true },
-//   { name: "ROLE", uid: "role", sortable: true },
-//   { name: "TEAM", uid: "team" },
-//   { name: "EMAIL", uid: "email" },
-//   { name: "STATUS", uid: "status", sortable: true },
-//   { name: "ACTIONS", uid: "actions" },
-// ];
-
-export const statusOptions = [
+const columns = [
+  { name: "ID", uid: "id", sortable: true },
+  { name: "NAME", uid: "name", sortable: true },
+  { name: "AGE", uid: "age", sortable: true },
+  { name: "ROLE", uid: "role", sortable: true },
+  { name: "TEAM", uid: "team" },
+  { name: "EMAIL", uid: "email" },
+  { name: "STATUS", uid: "status", sortable: true },
+  { name: "ACTIONS", uid: "actions" },
+];
+const statusOptions = [
   { name: "Active", uid: "active" },
   { name: "Paused", uid: "paused" },
   { name: "Vacation", uid: "vacation" },
 ];
 
-export const users = [
+const users = [
   {
     id: 1,
     name: "Tony Reichert",
@@ -238,11 +237,11 @@ export const users = [
   },
 ];
 
-export function capitalize(s) {
+function capitalize(s) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
 }
 
-export const PlusIcon = ({ size = 24, width, height, ...props }) => {
+const PlusIcon = ({ size = 24, width, height, ...props }) => {
   return (
     <svg
       aria-hidden="true"
@@ -268,7 +267,7 @@ export const PlusIcon = ({ size = 24, width, height, ...props }) => {
   );
 };
 
-export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
+ const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
   return (
     <svg
       aria-hidden="true"
@@ -288,7 +287,7 @@ export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
   );
 };
 
-export const SearchIcon = (props) => {
+const SearchIcon = (props) => {
   return (
     <svg
       aria-hidden="true"
@@ -318,7 +317,7 @@ export const SearchIcon = (props) => {
   );
 };
 
-export const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => {
+const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => {
   return (
     <svg
       aria-hidden="true"
@@ -351,16 +350,7 @@ const statusColorMap = {
 const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
 
 export default function App() {
-  const columns = [
-    { name: "ID", uid: "id", sortable: true },
-    { name: "NAME", uid: "name", sortable: true },
-    { name: "AGE", uid: "age", sortable: true },
-    { name: "ROLE", uid: "role", sortable: true },
-    { name: "TEAM", uid: "team" },
-    { name: "EMAIL", uid: "email" },
-    { name: "STATUS", uid: "status", sortable: true },
-    { name: "ACTIONS", uid: "actions" },
-  ];
+  
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(
