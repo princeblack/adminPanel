@@ -18,16 +18,16 @@ import {
   Pagination,
 } from "@nextui-org/react";
 
-export const columns = [
-  { name: "ID", uid: "id", sortable: true },
-  { name: "NAME", uid: "name", sortable: true },
-  { name: "AGE", uid: "age", sortable: true },
-  { name: "ROLE", uid: "role", sortable: true },
-  { name: "TEAM", uid: "team" },
-  { name: "EMAIL", uid: "email" },
-  { name: "STATUS", uid: "status", sortable: true },
-  { name: "ACTIONS", uid: "actions" },
-];
+// export const columns = [
+//   { name: "ID", uid: "id", sortable: true },
+//   { name: "NAME", uid: "name", sortable: true },
+//   { name: "AGE", uid: "age", sortable: true },
+//   { name: "ROLE", uid: "role", sortable: true },
+//   { name: "TEAM", uid: "team" },
+//   { name: "EMAIL", uid: "email" },
+//   { name: "STATUS", uid: "status", sortable: true },
+//   { name: "ACTIONS", uid: "actions" },
+// ];
 
 export const statusOptions = [
   { name: "Active", uid: "active" },
@@ -351,6 +351,16 @@ const statusColorMap = {
 const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
 
 export default function App() {
+  const columns = [
+    { name: "ID", uid: "id", sortable: true },
+    { name: "NAME", uid: "name", sortable: true },
+    { name: "AGE", uid: "age", sortable: true },
+    { name: "ROLE", uid: "role", sortable: true },
+    { name: "TEAM", uid: "team" },
+    { name: "EMAIL", uid: "email" },
+    { name: "STATUS", uid: "status", sortable: true },
+    { name: "ACTIONS", uid: "actions" },
+  ];
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(
