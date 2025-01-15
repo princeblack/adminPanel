@@ -241,7 +241,12 @@ function capitalize(s: string) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
 }
 
-const PlusIcon = ({ size = 24, width, height, ...props }) => {
+const PlusIcon: React.FC<{ size?: number; width?: number; height?: number }> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
   return (
     <svg
       aria-hidden="true"
@@ -267,7 +272,12 @@ const PlusIcon = ({ size = 24, width, height, ...props }) => {
   );
 };
 
- const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
+ const VerticalDotsIcon: React.FC<{ size?: number; width?: number; height?: number }> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+})  => {
   return (
     <svg
       aria-hidden="true"
@@ -287,7 +297,7 @@ const PlusIcon = ({ size = 24, width, height, ...props }) => {
   );
 };
 
-const SearchIcon = (props) => {
+const SearchIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props)=> {
   return (
     <svg
       aria-hidden="true"
@@ -394,7 +404,7 @@ export default function App() {
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+  }, [users, filterValue, statusFilter,]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
