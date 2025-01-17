@@ -7,7 +7,6 @@ import OrdersPieChart from "./OrdersPieChart";
 // import { parseDate } from "@internationalized/date";
 // import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import OrdersRadarChart from "./OrdersRadarChart";
-// import ActiveUsersCard from "./ActiveUsersCard";
 import ActiveUsersMapCard from "./ActiveUsersMapCard";
 
 export default function App() {

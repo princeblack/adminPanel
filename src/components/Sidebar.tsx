@@ -22,7 +22,7 @@ import { usePathname } from 'next/navigation';
 import { cn} from "@/lib/utils"
 
 const Sidebar = () => {
-  const isOpen = useSelector((state) => state.sidebar.isOpen);
+  const isOpen = useSelector((state: { sidebar: { isOpen: boolean } }) => state.sidebar.isOpen);
   const dispatch = useDispatch();
   const pathName = usePathname();
 

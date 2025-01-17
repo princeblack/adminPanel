@@ -5,7 +5,14 @@ import {Card,  CardBody, CardHeader} from "@nextui-org/react";
 import 'leaflet/dist/leaflet.css';
 import countryGeoData from "@/utils/geo.json";
 
-const activeUsersData = {
+
+interface ActiveUsersData {
+  [key: string]: number;
+}
+
+
+
+const activeUsersData: ActiveUsersData = {
   USA: 500,
   Canada: 300,
   UK: 250,
@@ -19,15 +26,21 @@ const activeUsersData = {
   "South Africa": 230,
   Brazil: 200,
 };
-
-
 const ActiveUsersMapCard = () => {
-  const getColor = (countryCode) => {
+
+  const getColor = (countryCode: string): string => {
     return activeUsersData[countryCode] ? '#0886e0' : '#cecccc'; 
   };
 
-  const style = (feature) => {
-    const countryCode = feature.properties.name; 
+  interface StyleFeature {
+    properties: {
+      name: string;
+    };
+  }
+
+  const style = (feature: StyleFeature | undefined) => {
+    if (!feature) return {};
+    const countryCode = feature.properties.name;
     return {
       fillColor: getColor(countryCode),
       weight: 1,
@@ -48,7 +61,7 @@ const ActiveUsersMapCard = () => {
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <GeoJSON data={countryGeoData} style={style} />
+          <GeoJSON data={countryGeoData as GeoJSON.FeatureCollection} style={style} />
         </MapContainer>
       </CardBody>
     </Card>

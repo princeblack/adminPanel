@@ -51,10 +51,10 @@ export const productData = [
   { id: 19, product: "Action Camera", sales: 80, revenus: 32000, stock: 9, status: "IN STOCK" },
   { id: 20, product: "Graphic Tablet", sales: 65, revenus: 32500, stock: 6, status: "IN STOCK" },
 ];
-export function capitalize(s) {
+export function capitalize(s: string) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
 }
-export const PlusIcon = ({size = 24, width, height, ...props}) => {
+export const PlusIcon = ({size = 24, width, height, ...props}: {size?: number, width?: number, height?: number, [key: string]: unknown}) => {
   return (
     <svg
       aria-hidden="true"
@@ -80,7 +80,7 @@ export const PlusIcon = ({size = 24, width, height, ...props}) => {
   );
 };
 
-export const VerticalDotsIcon = ({size = 24, width, height, ...props}) => {
+export const VerticalDotsIcon = ({size = 24, width, height, ...props}: {size?: number, width?: number, height?: number, [key: string]: unknown}) => {
   return (
     <svg
       aria-hidden="true"
@@ -99,7 +99,7 @@ export const VerticalDotsIcon = ({size = 24, width, height, ...props}) => {
     </svg>
   );
 };
-export const SearchIcon = (props) => {
+export const SearchIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       aria-hidden="true"
@@ -163,7 +163,7 @@ const INITIAL_VISIBLE_COLUMNS = ["product", "sales", "revenus","stock","status",
 const ProductSalesWidget = () => {
 
   const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -176,7 +176,7 @@ const ProductSalesWidget = () => {
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
+    if (visibleColumns.size === columns.length) return columns;
 
     return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
   }, [visibleColumns]);
@@ -196,7 +196,7 @@ const ProductSalesWidget = () => {
     }
 
     return filteredUsers;
-  }, [productData, filterValue, statusFilter]);
+  }, [filterValue, statusFilter, hasSearchFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -209,16 +209,16 @@ const ProductSalesWidget = () => {
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a, b) => {
-      const first = a[sortDescriptor.column];
-      const second = b[sortDescriptor.column];
+      const first = a[sortDescriptor.column as keyof typeof a];
+      const second = b[sortDescriptor.column as keyof typeof b];
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((product, columnKey) => {
-    const cellValue = product[columnKey];
+  const renderCell = React.useCallback((product: typeof productData[0], columnKey: string) => {
+    const cellValue = product[columnKey as keyof typeof product];
     console.log('====================================');
     console.log(product);
     console.log(columnKey);
@@ -250,7 +250,7 @@ const ProductSalesWidget = () => {
         );
       case "status":
         return (
-          <Chip className="capitalize" color={statusColorMap[product.status]} size="sm" variant="flat">
+          <Chip className="capitalize" color={statusColorMap[product.status as keyof typeof statusColorMap] as "success" | "danger"} size="sm" variant="flat">
             {cellValue}
           </Chip>
         );
@@ -260,7 +260,7 @@ const ProductSalesWidget = () => {
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly size="sm" >
-                  <VerticalDotsIcon className="text-default-300" />
+                  <VerticalDotsIcon className="text-default-300" width={24} height={24} />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
@@ -287,12 +287,12 @@ const ProductSalesWidget = () => {
     }
   }, [page]);
 
-  const onRowsPerPageChange = React.useCallback((e) => {
+  const onRowsPerPageChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
     setPage(1);
   }, []);
 
-  const onSearchChange = React.useCallback((value) => {
+  const onSearchChange = React.useCallback((value: string) => {
     if (value) {
       setFilterValue(value);
       setPage(1);
@@ -332,7 +332,7 @@ const ProductSalesWidget = () => {
                 closeOnSelect={false}
                 selectedKeys={statusFilter}
                 selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
+                onSelectionChange={(keys) => setStatusFilter(Array.from(keys).join(','))}
               >
                 {statusOptions.map((status) => (
                   <DropdownItem key={status.uid} className="capitalize">
@@ -353,7 +353,7 @@ const ProductSalesWidget = () => {
                 closeOnSelect={false}
                 selectedKeys={visibleColumns}
                 selectionMode="multiple"
-                onSelectionChange={setVisibleColumns}
+                onSelectionChange={(keys) => setVisibleColumns(new Set(Array.from(keys) as string[]))}
               >
                 {columns.map((column) => (
                   <DropdownItem key={column.uid} className="capitalize">
@@ -362,7 +362,7 @@ const ProductSalesWidget = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />}>
+            <Button color="primary" endContent={<PlusIcon width={24} height={24} />}>
               Add New
             </Button>
           </div>
@@ -389,7 +389,7 @@ const ProductSalesWidget = () => {
     return (
       <div className="py-2 px-2 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
+          {selectedKeys.size === filteredItems.length
             ? "All items selected"
             : `${selectedKeys.size} of ${filteredItems.length} selected`}
         </span>
@@ -427,11 +427,11 @@ const ProductSalesWidget = () => {
       }}
       selectedKeys={selectedKeys}
       selectionMode="multiple"
-      sortDescriptor={sortDescriptor}
+      sortDescriptor={sortDescriptor as unknown as { column: string; direction: "ascending" | "descending" }}
       topContent={topContent}
       topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
+      onSelectionChange={(keys) => setSelectedKeys(new Set(Array.from(keys) as string[]))}
+      onSortChange={(descriptor) => setSortDescriptor(descriptor as { column: string; direction: "ascending" | "descending" })}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -447,7 +447,7 @@ const ProductSalesWidget = () => {
       <TableBody emptyContent={"No product found"} items={sortedItems}>
         {(item) => (
           <TableRow key={item.id}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            {(columnKey) => <TableCell>{renderCell(item, columnKey as string)}</TableCell>}
           </TableRow>
         )}
       </TableBody>

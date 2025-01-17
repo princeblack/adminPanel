@@ -25,7 +25,21 @@ import {
   MoveUpLeft,
 } from "lucide-react";
 
-const RevenueCard = ({data,summe,title, subtitle}) => {
+interface RevenueCardProps {
+  data: {
+    labels: string[];
+    datasets: {
+      label: string;
+      data: number[];
+      backgroundColor: string;
+    }[];
+  }; // Replace with the appropriate type if known
+  summe: string;
+  title: string;
+  subtitle: string;
+}
+
+const RevenueCard: React.FC<RevenueCardProps> = ({ data, summe, title, subtitle }) => {
   const changePercentage = 82; 
   const isPositive = changePercentage >= 0;
   const arrowIcon = isPositive ? (

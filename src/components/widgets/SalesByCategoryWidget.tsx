@@ -24,7 +24,7 @@ const SalesByCategoryWidget = () => {
     // maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "top",
+        position: "top" as const,
       },
       title: {
         display: false,

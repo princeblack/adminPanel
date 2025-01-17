@@ -64,8 +64,8 @@ const RevenueBreakdownWidget = () => {
       },
     },
     animation: {
-      duration: 2000, 
-      easing: "easeInOutQuart",
+      duration: 2000,
+      easing: "easeInOutQuad" as const,
     },
     scales: {
       xAxis: {

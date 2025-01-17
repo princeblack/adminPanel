@@ -1,5 +1,7 @@
 "use client";
 import React from "react";
+import { Key } from "@react-types/shared";
+import { SortDescriptor } from "@nextui-org/react";
 import {
   Table,
   TableHeader,
@@ -18,11 +20,11 @@ import {
   Pagination,
 } from "@nextui-org/react";
 
-export function capitalize(s) {
+export function capitalize(s: string) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
 }
 
-export const PlusIcon = ({ size = 24, width, height, ...props }) => {
+export const PlusIcon = ({ size = 24, width = 24, height = 24, ...props }) => {
   return (
     <svg
       aria-hidden="true"
@@ -48,7 +50,7 @@ export const PlusIcon = ({ size = 24, width, height, ...props }) => {
   );
 };
 
-export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
+export const VerticalDotsIcon = ({ size = 24, width = 24, height = 24, className="", ...props }: { size?: number; width?: number; height?: number; className?: string ;}) => {
   return (
     <svg
       aria-hidden="true"
@@ -58,6 +60,7 @@ export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
       role="presentation"
       viewBox="0 0 24 24"
       width={size || width}
+      className={className}
       {...props}
     >
       <path
@@ -68,7 +71,7 @@ export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
   );
 };
 
-export const SearchIcon = (props) => {
+export const SearchIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       aria-hidden="true"
@@ -128,15 +131,21 @@ export default function TableComponent({
   statusOptions,
   columns,
   VISIBLE_COLUMNS
+}: {
+  statusColorMap: { [key: string]: "default" | "primary" | "secondary" | "success" | "warning" | "danger" | undefined },
+  data: { id: string; name: string; email: string; avatar?: string; team?: string; status: string; age: number; role: string }[],
+  statusOptions: { uid: string, name: string }[],
+  columns: { uid: string, name: string, sortable?: boolean }[],
+  VISIBLE_COLUMNS: string[]
 }) {
+  const [selectedKeys, setSelectedKeys] = React.useState<"all" | Set<Key>>(new Set());
   const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(
     new Set(VISIBLE_COLUMNS)
   );
-  const [statusFilter, setStatusFilter] = React.useState("all");
+  const [statusFilter, setStatusFilter] = React.useState<Set<Key>>(new Set(["all"]));
   const [rowsPerPage, setRowsPerPage] = React.useState(12);
-  const [sortDescriptor, setSortDescriptor] = React.useState({
+  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
   });
@@ -147,12 +156,12 @@ export default function TableComponent({
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
+    if (visibleColumns instanceof Set && visibleColumns.size === columns.length) return columns;
 
-    return columns.filter((column) =>
+    return columns.filter((column: { uid: string }) =>
       Array.from(visibleColumns).includes(column.uid)
     );
-  }, [visibleColumns]);
+  }, [visibleColumns, columns]);
 
   const filteredItems = React.useMemo(() => {
     let filteredUsers = [...data];
@@ -163,16 +172,16 @@ export default function TableComponent({
       );
     }
     if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions.length
+      !(statusFilter as unknown as Set<Key>).has("all") &&
+      Array.from(statusFilter as unknown as Set<Key>).length !== statusOptions.length
     ) {
       filteredUsers = filteredUsers.filter((item) =>
-        Array.from(statusFilter).includes(item.status)
+        Array.from(statusFilter as unknown as Set<Key>).includes(item.status)
       );
     }
 
     return filteredUsers;
-  }, [data, filterValue, statusFilter]);
+  }, [data, filterValue, statusFilter, hasSearchFilter, statusOptions.length]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -183,22 +192,22 @@ export default function TableComponent({
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a, b) => {
-      const first = a[sortDescriptor.column];
-      const second = b[sortDescriptor.column];
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
+      const first = a[sortDescriptor.column as keyof typeof a];
+      const second = b[sortDescriptor.column as keyof typeof b];
+      const cmp = (first ?? 0) < (second ?? 0) ? -1 : (first ?? 0) > (second ?? 0) ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((item, columnKey) => {
+  const renderCell = React.useCallback((item: { [key: string]: string | number | boolean }, columnKey: string) => {
     const cellValue = item[columnKey];
 
     switch (columnKey) {
       case "name":
         return (
           <User
-            avatarProps={{ radius: "full", size: "sm", src: item.avatar }}
+            avatarProps={{ radius: "full", size: "sm", src: typeof item.avatar === 'string' ? item.avatar : undefined }}
             classNames={{
               description: "text-default-500",
             }}
@@ -221,7 +230,7 @@ export default function TableComponent({
         return (
           <Chip
             className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[item.status]}
+            color={statusColorMap[String(item.status)]}
             size="sm"
             variant="dot"
           >
@@ -234,7 +243,7 @@ export default function TableComponent({
             <Dropdown className="bg-background border-1 border-default-200">
               <DropdownTrigger>
                 <Button isIconOnly radius="full" size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-400" />
+                  <VerticalDotsIcon className="text-default-400" width={24} height={24} />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
@@ -250,12 +259,12 @@ export default function TableComponent({
     }
   }, []);
 
-  const onRowsPerPageChange = React.useCallback((e) => {
+  const onRowsPerPageChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
     setPage(1);
   }, []);
 
-  const onSearchChange = React.useCallback((value) => {
+  const onSearchChange = React.useCallback((value: string) => {
     if (value) {
       setFilterValue(value);
       setPage(1);
@@ -297,11 +306,11 @@ export default function TableComponent({
                 disallowEmptySelection
                 aria-label="Table Columns"
                 closeOnSelect={false}
-                selectedKeys={statusFilter}
+                selectedKeys={statusFilter as unknown as Iterable<Key>}
                 selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
+                onSelectionChange={(keys) => setStatusFilter(keys as Set<Key>)}
               >
-                {statusOptions.map((status) => (
+                {statusOptions.map((status: { uid: string; name: string }) => (
                   <DropdownItem key={status.uid} className="capitalize">
                     {capitalize(status.name)}
                   </DropdownItem>
@@ -322,11 +331,11 @@ export default function TableComponent({
                 disallowEmptySelection
                 aria-label="Table Columns"
                 closeOnSelect={false}
-                selectedKeys={visibleColumns}
+                selectedKeys={visibleColumns as Set<Key>}
                 selectionMode="multiple"
-                onSelectionChange={setVisibleColumns}
+                onSelectionChange={(keys) => setVisibleColumns(new Set(Array.from(keys as Set<Key>).map(String)))}
               >
-                {columns.map((column) => (
+                {columns.map((column: { uid: string; name: string }) => (
                   <DropdownItem key={column.uid} className="capitalize">
                     {capitalize(column.name)}
                   </DropdownItem>
@@ -369,7 +378,8 @@ export default function TableComponent({
     onSearchChange,
     onRowsPerPageChange,
     data.length,
-    hasSearchFilter,
+    columns,
+    statusOptions,
   ]);
 
   const bottomContent = React.useMemo(() => {
@@ -432,11 +442,12 @@ export default function TableComponent({
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
+      onSelectionChange={(keys) => setSelectedKeys(keys as Set<Key> | "all")}
+      onSortChange={(descriptor) => setSortDescriptor(descriptor as { column: string, direction: 'ascending' | 'descending' })}
+
     >
       <TableHeader columns={headerColumns}>
-        {(column) => (
+        {(column: { uid: string; name: string; sortable?: boolean }) => (
           <TableColumn
             key={column.uid}
             align={column.uid === "actions" ? "center" : "start"}
@@ -450,7 +461,7 @@ export default function TableComponent({
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
+              <TableCell>{renderCell(item, columnKey as string)}</TableCell>
             )}
           </TableRow>
         )}

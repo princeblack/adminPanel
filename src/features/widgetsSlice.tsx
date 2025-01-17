@@ -1,10 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface Widget {
+  id: string;
+  // add other properties as needed
+}
 
 const widgetsSlice = createSlice({
   name: "widgets",
-  initialState: [],
+  initialState: [] as Widget[],
   reducers: {
-    addWidget: (state, action) => {
+    addWidget: (state, action: PayloadAction<Widget>) => {
       state.push(action.payload);
     },
     removeWidget: (state, action) => {

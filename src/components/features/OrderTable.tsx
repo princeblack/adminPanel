@@ -215,11 +215,11 @@ export const orders = [
   },
 ];
 
-export function capitalize(s) {
+export function capitalize(s: string) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
 }
 
-export const PlusIcon = ({ size = 24, width, height, ...props }) => {
+export const PlusIcon = ({ size = 24, width, height, ...props }: { size?: number, width?: number, height?: number, [key: string]: unknown }) => {
   return (
     <svg
       aria-hidden="true"
@@ -245,7 +245,7 @@ export const PlusIcon = ({ size = 24, width, height, ...props }) => {
   );
 };
 
-export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
+export const VerticalDotsIcon = ({ size = 24, width, height, ...props }: { size?: number, width?: number, height?: number, [key: string]: unknown }) => {
   return (
     <svg
       aria-hidden="true"
@@ -265,7 +265,7 @@ export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
   );
 };
 
-export const SearchIcon = (props) => {
+export const SearchIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       aria-hidden="true"
@@ -319,7 +319,7 @@ export const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => {
   );
 };
 
-const statusColorMap = {
+const statusColorMap: Record<string, "default" | "primary" | "secondary" | "success" | "warning" | "danger" | undefined> = {
   pending: "warning",
   shipped: "primary",
   delivered: "success",
@@ -337,7 +337,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 export default function OrderTable() {
   const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set());
   const [visibleColumns, setVisibleColumns] = React.useState(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
@@ -354,7 +354,7 @@ export default function OrderTable() {
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
+    if (visibleColumns.size === columns.length) return columns;
 
     return columns.filter((column) =>
       Array.from(visibleColumns).includes(column.uid)
@@ -365,21 +365,21 @@ export default function OrderTable() {
     let filteredUsers = [...orders];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase())
+      filteredUsers = filteredUsers.filter((order) =>
+        order.customerName.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     if (
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusOptions.length
     ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status)
+      filteredUsers = filteredUsers.filter((order) =>
+        Array.from(statusFilter).includes(order.status)
       );
     }
 
     return filteredUsers;
-  }, [orders, filterValue, statusFilter]);
+  }, [filterValue, statusFilter, hasSearchFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -390,29 +390,29 @@ export default function OrderTable() {
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a, b) => {
-      const first = a[sortDescriptor.column];
-      const second = b[sortDescriptor.column];
+      const first = a[sortDescriptor.column as keyof typeof a];
+      const second = b[sortDescriptor.column as keyof typeof b];
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+   const renderCell = React.useCallback((order: typeof orders[0], columnKey: string) => {
+      const cellValue = order[columnKey as keyof typeof order];
 
     switch (columnKey) {
-      case "name":
+      case "customerName":
         return (
           <User
-            avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
+            avatarProps={{ radius: "full", size: "sm", src: "" }}
             classNames={{
               description: "text-default-500",
             }}
-            description={user.email}
+            // description={order?.email}
             name={cellValue}
           >
-            {user.email}
+            {/* {order?.email} */}
           </User>
         );
       case "role":
@@ -420,7 +420,7 @@ export default function OrderTable() {
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{cellValue}</p>
             <p className="text-bold text-tiny capitalize text-default-500">
-              {user.team}
+              {/* {order?.team} */}
             </p>
           </div>
         );
@@ -428,7 +428,7 @@ export default function OrderTable() {
         return (
           <Chip
             className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[user.status]}
+            color={statusColorMap[order.status as keyof typeof statusColorMap]}
             size="sm"
             variant="dot"
           >
@@ -441,7 +441,7 @@ export default function OrderTable() {
             <Dropdown className="bg-background border-1 border-default-200">
               <DropdownTrigger>
                 <Button isIconOnly radius="full" size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-400" />
+                  <VerticalDotsIcon className="text-default-400" width={24} height={24} />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
@@ -457,12 +457,12 @@ export default function OrderTable() {
     }
   }, []);
 
-  const onRowsPerPageChange = React.useCallback((e) => {
+  const onRowsPerPageChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
     setPage(1);
   }, []);
 
-  const onSearchChange = React.useCallback((value) => {
+  const onSearchChange = React.useCallback((value: string) => {
     if (value) {
       setFilterValue(value);
       setPage(1);
@@ -506,7 +506,7 @@ export default function OrderTable() {
                 closeOnSelect={false}
                 selectedKeys={statusFilter}
                 selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
+                onSelectionChange={(keys) => setStatusFilter(Array.from(keys).join(','))}
               >
                 {statusOptions.map((status) => (
                   <DropdownItem key={status.uid} className="capitalize">
@@ -531,7 +531,7 @@ export default function OrderTable() {
                 closeOnSelect={false}
                 selectedKeys={visibleColumns}
                 selectionMode="multiple"
-                onSelectionChange={setVisibleColumns}
+                onSelectionChange={(keys) => setVisibleColumns(new Set(Array.from(keys) as string[]))}
               >
                 {columns.map((column) => (
                   <DropdownItem key={column.uid} className="capitalize">
@@ -542,7 +542,7 @@ export default function OrderTable() {
             </Dropdown>
             <Button
               className="bg-foreground text-background"
-              endContent={<PlusIcon />}
+              endContent={<PlusIcon width={24} height={24} />}
               size="sm"
             >
               Add New
@@ -585,7 +585,7 @@ export default function OrderTable() {
           onChange={setPage}
         />
         <span className="text-small text-default-400">
-          {selectedKeys === "all"
+          {selectedKeys.size === items.length
             ? "All items selected"
             : `${selectedKeys.size} of ${items.length} selected`}
         </span>
@@ -626,11 +626,11 @@ export default function OrderTable() {
       }}
       classNames={classNames}
       selectedKeys={selectedKeys}
-      sortDescriptor={sortDescriptor}
+      sortDescriptor={{ column: sortDescriptor.column, direction: sortDescriptor.direction as 'ascending' | 'descending' }}
       topContent={topContent}
       topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
+      onSelectionChange={(keys) => setSelectedKeys(new Set(keys as unknown as string[]))}
+      onSortChange={(descriptor) => setSortDescriptor(descriptor as { column: string, direction: 'ascending' | 'descending' })}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -647,7 +647,7 @@ export default function OrderTable() {
         {(item) => (
           <TableRow key={item.orderId}>
             {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
+              <TableCell>{renderCell(item, columnKey as string)}</TableCell>
             )}
           </TableRow>
         )}

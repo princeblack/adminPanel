@@ -272,7 +272,7 @@ const PlusIcon: React.FC<{ size?: number; width?: number; height?: number }> = (
   );
 };
 
- const VerticalDotsIcon: React.FC<{ size?: number; width?: number; height?: number }> = ({
+ const VerticalDotsIcon: React.FC<{ size?: number; width?: number; height?: number; className?: string }> = ({
   size = 24,
   width,
   height,
@@ -351,7 +351,7 @@ const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => {
   );
 };
 
-const statusColorMap = {
+const statusColorMap: { [key: string]: "success" | "danger" | "warning" } = {
   active: "success",
   paused: "danger",
   vacation: "warning",
@@ -362,7 +362,7 @@ const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
 export default function App() {
   
   const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set());
   const [visibleColumns, setVisibleColumns] = React.useState(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
@@ -379,7 +379,7 @@ export default function App() {
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
+    if (visibleColumns.size === columns.length) return columns;
 
     return columns.filter((column) =>
       Array.from(visibleColumns).includes(column.uid)
@@ -404,7 +404,7 @@ export default function App() {
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter,]);
+  }, [filterValue, statusFilter, hasSearchFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -415,16 +415,16 @@ export default function App() {
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a, b) => {
-      const first = a[sortDescriptor.column];
-      const second = b[sortDescriptor.column];
+      const first = a[sortDescriptor.column as keyof typeof a];
+      const second = b[sortDescriptor.column as keyof typeof b];
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  const renderCell = React.useCallback((user: typeof users[0], columnKey: string) => {
+    const cellValue = user[columnKey as keyof typeof user];
 
     switch (columnKey) {
       case "name":
@@ -453,7 +453,7 @@ export default function App() {
         return (
           <Chip
             className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[user.status]}
+            color={statusColorMap[user.status as keyof typeof statusColorMap]}
             size="sm"
             variant="dot"
           >
@@ -466,7 +466,7 @@ export default function App() {
             <Dropdown className="bg-background border-1 border-default-200">
               <DropdownTrigger>
                 <Button isIconOnly radius="full" size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-400" />
+                  <VerticalDotsIcon size={24} className="text-default-400" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
@@ -482,12 +482,12 @@ export default function App() {
     }
   }, []);
 
-  const onRowsPerPageChange = React.useCallback((e) => {
+  const onRowsPerPageChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
     setPage(1);
   }, []);
 
-  const onSearchChange = React.useCallback((value) => {
+  const onSearchChange = React.useCallback((value: string) => {
     if (value) {
       setFilterValue(value);
       setPage(1);
@@ -531,7 +531,7 @@ export default function App() {
                 closeOnSelect={false}
                 selectedKeys={statusFilter}
                 selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
+                onSelectionChange={(keys) => setStatusFilter(Array.from(keys).join(','))}
               >
                 {statusOptions.map((status) => (
                   <DropdownItem key={status.uid} className="capitalize">
@@ -556,7 +556,7 @@ export default function App() {
                 closeOnSelect={false}
                 selectedKeys={visibleColumns}
                 selectionMode="multiple"
-                onSelectionChange={setVisibleColumns}
+                onSelectionChange={(keys) => setVisibleColumns(new Set(Array.from(keys) as string[]))}
               >
                 {columns.map((column) => (
                   <DropdownItem key={column.uid} className="capitalize">
@@ -610,7 +610,7 @@ export default function App() {
           onChange={setPage}
         />
         <span className="text-small text-default-400">
-          {selectedKeys === "all"
+          {selectedKeys.size === users.length
             ? "All items selected"
             : `${selectedKeys.size} of ${items.length} selected`}
         </span>
@@ -653,11 +653,11 @@ export default function App() {
         classNames={classNames}
         selectedKeys={selectedKeys}
         selectionMode="multiple"
-        sortDescriptor={sortDescriptor}
+        sortDescriptor={{ column: sortDescriptor.column, direction: sortDescriptor.direction as 'ascending' | 'descending' }}
         topContent={topContent}
         topContentPlacement="outside"
-        onSelectionChange={setSelectedKeys}
-        onSortChange={setSortDescriptor}
+        onSelectionChange={(keys) => setSelectedKeys(new Set(keys as Set<string>))}
+        onSortChange={(descriptor) => setSortDescriptor({ column: descriptor.column as string, direction: descriptor.direction })}
         >
         <TableHeader columns={headerColumns}>
             {(column) => (
@@ -674,7 +674,7 @@ export default function App() {
             {(item) => (
             <TableRow key={item.id}>
                 {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                <TableCell>{renderCell(item, columnKey.toString())}</TableCell>
                 )}
             </TableRow>
             )}

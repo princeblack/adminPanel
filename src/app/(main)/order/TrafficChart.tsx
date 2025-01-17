@@ -29,7 +29,7 @@ const data = [
 
 const TrafficChart = () => {
   return (
-    <Card css={{ padding: "20px", maxWidth: "400px" }}>
+    <Card style={{ padding: "20px", maxWidth: "400px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h4>Traffic</h4>
         <Dropdown>
