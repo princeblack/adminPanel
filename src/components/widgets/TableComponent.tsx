@@ -138,7 +138,7 @@ export default function TableComponent({
   VISIBLE_COLUMNS
 }: {
   statusColorMap: { [key: string]: string },
-  data: { id: number; name: string; email: string; avatar?: string; team?: string; status: string; age?: number; role?: string }[],
+  data: { [key: string]: unknown }[],
   statusOptions: CustomerStatusOption[],
   columns: { uid: string; name: string; sortable?: boolean }[],
   VISIBLE_COLUMNS: string[]
@@ -173,7 +173,7 @@ export default function TableComponent({
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((item) =>
-        item.name.toLowerCase().includes(filterValue.toLowerCase())
+        (item as { name: string }).name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     if (
@@ -181,7 +181,7 @@ export default function TableComponent({
       Array.from(statusFilter as unknown as Set<Key>).length !== statusOptions.length
     ) {
       filteredUsers = filteredUsers.filter((item) =>
-        Array.from(statusFilter as unknown as Set<Key>).includes(item.status)
+        Array.from(statusFilter as Set<Key>).includes(item.status as Key)
       );
     }
 
@@ -205,7 +205,7 @@ export default function TableComponent({
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((item: { [key: string]: string | number  }, columnKey: string) => {
+  const renderCell = React.useCallback((item: { [key: string]: unknown }, columnKey: string) => {
     const cellValue = item[columnKey];
     
     switch (columnKey) {
@@ -216,18 +216,18 @@ export default function TableComponent({
             classNames={{
               description: "text-default-500",
             }}
-            description={item.email}
-            name={cellValue}
+            description={item.email as string}
+            name={cellValue as string}
           >
-            {item.email}
+            {item.email as string}
           </User>
         );
       case "role":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
+            <p className="text-bold text-small capitalize">{cellValue as string}</p>
             <p className="text-bold text-tiny capitalize text-default-500">
-              {item.team}
+              {item.team as string}
             </p>
           </div>
         );
@@ -239,7 +239,7 @@ export default function TableComponent({
             size="sm"
             variant="dot"
           >
-            {cellValue}
+            {cellValue as React.ReactNode}
           </Chip>
         );
       case "actions":
@@ -464,9 +464,9 @@ export default function TableComponent({
       </TableHeader>
       <TableBody emptyContent={"No data found"} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item.id as Key}>
             {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey as string)}</TableCell>
+              <TableCell>{renderCell(item, columnKey as string) as React.ReactNode}</TableCell>
             )}
           </TableRow>
         )}
