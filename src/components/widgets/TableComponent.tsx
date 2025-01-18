@@ -124,6 +124,11 @@ export const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => {
     </svg>
   );
 };
+interface CustomerStatusOption {
+  name: string;
+  uid: string;
+}
+
 
 export default function TableComponent({
   statusColorMap,
@@ -132,10 +137,10 @@ export default function TableComponent({
   columns,
   VISIBLE_COLUMNS
 }: {
-  statusColorMap: { [key: string]: "default" | "primary" | "secondary" | "success" | "warning" | "danger" | undefined },
-  data: { id: string; name: string; email: string; avatar?: string; team?: string; status: string; age: number; role: string }[],
-  statusOptions: { uid: string, name: string }[],
-  columns: { uid: string, name: string, sortable?: boolean }[],
+  statusColorMap: { [key: string]: string },
+  data: { id: number; name: string; email: string; avatar?: string; team?: string; status: string; age?: number; role?: string }[],
+  statusOptions: CustomerStatusOption[],
+  columns: { uid: string; name: string; sortable?: boolean }[],
   VISIBLE_COLUMNS: string[]
 }) {
   const [selectedKeys, setSelectedKeys] = React.useState<"all" | Set<Key>>(new Set());
@@ -200,9 +205,9 @@ export default function TableComponent({
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((item: { [key: string]: string | number | boolean }, columnKey: string) => {
+  const renderCell = React.useCallback((item: { [key: string]: string | number  }, columnKey: string) => {
     const cellValue = item[columnKey];
-
+    
     switch (columnKey) {
       case "name":
         return (
@@ -230,7 +235,7 @@ export default function TableComponent({
         return (
           <Chip
             className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[String(item.status)]}
+            color={statusColorMap[item.status as keyof typeof statusColorMap] as "success" | "danger"}
             size="sm"
             variant="dot"
           >
@@ -257,7 +262,7 @@ export default function TableComponent({
       default:
         return cellValue;
     }
-  }, []);
+  }, [statusColorMap]);
 
   const onRowsPerPageChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
