@@ -2,16 +2,11 @@
 import React from "react";
 import RevenueCard from "@/components/features/RevenueCard";
 import OrderTable from "@/components/features/OrderTable";
-import OrdersPieChart from "../../../components/features/OrdersPieChart";
-// import { Calendar } from "@nextui-org/react";
-// import { parseDate } from "@internationalized/date";
-// import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
-import OrdersRadarChart from "../../../components/features/OrdersRadarChart";
-import ActiveUsersMapCard from "../../../components/features/ActiveUsersMapCard";
+import OrdersPieChart from "@/components/features/OrdersPieChart";
+import OrdersRadarChart from "@/components/features/OrdersRadarChart";
+import ActiveUsersMapCard from "@/components/features/ActiveUsersMapCard";
 
 export default function App() {
-  // let [value, setValue] = React.useState(parseDate("2024-03-07"));
-
   const data = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
