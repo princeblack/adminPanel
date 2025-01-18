@@ -1,4 +1,3 @@
-"use client"
 import TableComponent from "@/components/widgets/TableComponent";
 import React from "react";
 import { productColumns, products, productStatusOptions,productStatusColorMap,PRODUCT_INITIAL_VISIBLE_COLUMNS } from "@/utils/tableProps";

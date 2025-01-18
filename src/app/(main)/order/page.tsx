@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import RevenueCard from "@/components/features/RevenueCard";
 import OrderTable from "@/components/features/OrderTable";

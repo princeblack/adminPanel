@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 // import L from 'leaflet';

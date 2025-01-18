@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-
 import { Providers } from "@/providers/providers";
 import StoreProvider from "@/providers/StoreProvider";
 import { DM_Sans } from "next/font/google";
