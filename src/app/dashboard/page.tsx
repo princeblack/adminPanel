@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
-import TotalIncomeWidget from "../../../components/widgets/TotalIncomeWidget";
-import ProductSalesWidget from "../../../components/widgets/ProductSalesWidget";
-import PendingOrdersWidget from "../../../components/widgets/PendingOrdersWidget";
-import ConversionRate from "../../../components/widgets/ConversionRateWidget";
-import Profit from "../../../components/widgets/Profit";
-import RevenueOverTimeWidget from "../../../components/widgets/RevenueOverTimeWidget";
-import SalesByCategoryWidget from "../../../components/widgets/SalesByCategoryWidget";
-import RevenueBreakdownWidget from "../../../components/widgets/RevenueBreakdownWidget";
+import TotalIncomeWidget from "../../components/widgets/TotalIncomeWidget";
+import ProductSalesWidget from "../../components/widgets/ProductSalesWidget";
+import PendingOrdersWidget from "../../components/widgets/PendingOrdersWidget";
+import ConversionRate from "../../components/widgets/ConversionRateWidget";
+import Profit from "../../components/widgets/Profit";
+import RevenueOverTimeWidget from "../../components/widgets/RevenueOverTimeWidget";
+import SalesByCategoryWidget from "../../components/widgets/SalesByCategoryWidget";
+import RevenueBreakdownWidget from "../../components/widgets/RevenueBreakdownWidget";
 
 const MainSection = () => {
   return (
