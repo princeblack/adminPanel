@@ -2,9 +2,14 @@ import { Schema, model, models } from "mongoose";
 
 
 const UserSchema = new Schema({
-    name: { type: String, required: true },
+    id: { type: String, required: true },
+    clerkId: { type: String, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    username: { type: String},
+    phone: { type: Number},
     picture: [{ type: String }], // URLs des images
     role: { type: String, enum: ["admin", "customer"], default: "admin" },
     isVerified: { type: Boolean, default: false }, // Confirmation par e-mail
