@@ -1,17 +1,16 @@
-import { createClerkClient } from "@clerk/backend";
+// import { createClerkClient } from "@clerk/backend";
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { log } from "console";
-import { creatUser } from "@/lib/actions/user.action";
-import { NextResponse } from "next/server";
+// import { creatUser } from "@/lib/actions/user.action";
+// import { NextResponse } from "next/server";
 // import { creatUser} from "@/lib/actions/user.action";
 
 export async function POST(req: Request) {
   const WEBHOOK_CLERK_SECRET = process.env.WEBHOOK_CLERK_SECRET;
-  const clerkClient = createClerkClient({
-    secretKey: process.env.CLERK_SECRET_KEY,
-  });
+  // const clerkClient = createClerkClient({
+  //   secretKey: process.env.CLERK_SECRET_KEY,
+  // });
 
   if (!WEBHOOK_CLERK_SECRET) {
     throw new Error(
@@ -61,40 +60,40 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   // Create a new user in MongoDB
-  if (eventType === "user.created") {
-    const {
-      id,
-      email_addresses,
-      first_name,
-      last_name,
-      image_url,
-      phone_numbers,
-      username,
-    } = evt.data;
-    const user = {
-      id,
-      email: email_addresses[0].email_address,
-      firstName: first_name,
-      lastName: last_name,
-      picture: image_url,
-      phone: phone_numbers[0].phone_number,
-      username: username!,
-      role: "admin",
-      password_enabled: true,
-    };
-    log(user);
-    const newUser = await creatUser(user);
-    console.log("New user created:", newUser);
+  // if (eventType === "user.created") {
+  //   const {
+  //     id,
+  //     email_addresses,
+  //     first_name,
+  //     last_name,
+  //     image_url,
+  //     phone_numbers,
+  //     username,
+  //   } = evt.data;
+  //   const user = {
+  //     id,
+  //     email: email_addresses[0].email_address,
+  //     firstName: first_name,
+  //     lastName: last_name,
+  //     picture: image_url,
+  //     phone: phone_numbers[0].phone_number,
+  //     username: username!,
+  //     role: "admin",
+  //     password_enabled: true,
+  //   };
+  //   log(user);
+  //   const newUser = await creatUser(user);
+  //   console.log("New user created:", newUser);
     
-    if (newUser) {
-      await clerkClient.users.updateUserMetadata(id, {
-        publicMetadata: {
-          userId: newUser.id,
-        },
-      });
-    }
-    return NextResponse.json({ message: "New user created", user: newUser });
-  }
+  //   if (newUser) {
+  //     await clerkClient.users.updateUserMetadata(id, {
+  //       publicMetadata: {
+  //         userId: newUser.id,
+  //       },
+  //     });
+  //   }
+  //   return NextResponse.json({ message: "New user created", user: newUser });
+  // }
 
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
   console.log("Webhook payload:", body);
